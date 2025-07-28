@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block container %}
+
+<div class="container mt-4">
+    <h1>Bienvenido al Simulador ICFES</h1>
+    <p>Haz clic para comenzar el simulacro:</p>
+    <a href="{% url 'exam_start' %}" class="btn btn-primary">Iniciar examen</a>
+
+    <hr>
+
+    <h4 class="mt-5">Exámenes Presentados</h4>
+
+    {% if exams %}
+        <div class="row mt-3">
+            {% for exam in exams %}
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ exam.student_name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ exam.date|date:"Y-m-d H:i" }}</h6>
+                            <p class="card-text">
+                                <strong>Puntaje:</strong> {{ exam.score }} / 100
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted mt-3">Aún no se han presentado exámenes.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

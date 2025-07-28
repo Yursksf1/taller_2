@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block container %}
+
+<div class="container mt-4">
+    <h1>Simulacro ICFES</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="student_name">Nombre del estudiante:</label>
+        <input type="text" name="student_name" id="student_name" required>
+        <br><br>
+        <button type="submit">Iniciar examen</button>
+    </form>
+    <br>
+    <a href="{% url 'index' %}">← Volver al inicio</a>
+</div>
+
+{% endblock %}

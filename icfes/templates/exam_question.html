@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block container %}
+
+<div class="container mt-4">
+     <h2>{{ pregunta.text }}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label><input type="radio" name="respuesta" value="A" required> {{ pregunta.option_a }}</label><br>
+        <label><input type="radio" name="respuesta" value="B"> {{ pregunta.option_b }}</label><br>
+        <label><input type="radio" name="respuesta" value="C"> {{ pregunta.option_c }}</label><br>
+        <label><input type="radio" name="respuesta" value="D"> {{ pregunta.option_d }}</label><br><br>
+        <button type="submit">Responder</button>
+    </form>
+</div>
+
+{% endblock %}

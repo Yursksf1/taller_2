@@ -1,0 +1,67 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Exam, Question, Answer
+import random
+
+def index(request):
+    exams = Exam.objects.all().order_by('-date') # muestra los últimos 10 exámenes
+    return render(request, 'index.html', {'exams': exams})
+
+def exam_start(request):
+    if request.method == 'POST':
+        student_name = request.POST.get('student_name')
+        all_questions = list(Question.objects.all())
+        selected_questions = random.sample(all_questions, min(10, len(all_questions)))
+
+        exam = Exam.objects.create(student_name=student_name)
+        exam.questions.set(selected_questions)
+        exam.save()
+
+        request.session['exam_id'] = exam.id
+        request.session['question_index'] = 0
+
+        return redirect('exam_question')
+
+    return render(request, 'exam_start.html')
+
+
+def exam_question(request):
+    exam_id = request.session.get('exam_id')
+    index = request.session.get('question_index', 0)
+
+    exam = get_object_or_404(Exam, id=exam_id)
+    questions = list(exam.questions.all())
+
+    if index >= len(questions):
+        return redirect('exam_result')
+
+    question = questions[index]
+
+    if request.method == 'POST':
+        selected = request.POST.get('respuesta')
+        is_correct = question.correct_answer == selected
+
+        Answer.objects.create(
+            exam=exam,
+            question=question,
+            selected_answer=selected,
+            is_correct=is_correct
+        )
+
+        request.session['question_index'] = index + 1
+
+        if index + 1 >= len(questions):
+            total_correct = Answer.objects.filter(exam=exam, is_correct=True).count()
+            exam.score = round((total_correct / len(questions)) * 100, 2)
+            exam.save()
+            return redirect('exam_result')
+        else:
+            return redirect('exam_question')
+
+    return render(request, 'exam_question.html', {'pregunta': question})
+
+
+def exam_result(request):
+    exam_id = request.session.get('exam_id')
+    exam = get_object_or_404(Exam, id=exam_id)
+
+    return render(request, 'exam_result.html', {'exam': exam})

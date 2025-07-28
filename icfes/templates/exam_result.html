@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block container %}
+
+<div class="container mt-4">
+    <h1>Resultado del Simulacro</h1>
+    <p><strong>Estudiante:</strong> {{ exam.student_name }}</p>
+    <p><strong>Puntaje final:</strong> {{ exam.score }} / 100</p>
+
+    <a href="{% url 'exam_start' %}">Volver a iniciar examen</a><br>
+    <a href="{% url 'index' %}">Volver al inicio</a>
+</div>
+
+{% endblock %}
