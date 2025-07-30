@@ -12,11 +12,11 @@ def exam_start(request):
         student_name = request.POST.get('student_name')
         category = request.POST.get('category')
         print(f"Selected category: {category}")
-        all_questions = []
+        query = Question.objects
         if category and category.isdigit():
-            all_questions = list(Question.objects.filter(subject__category__id=category))
-        else:
-            all_questions = list(Question.objects.all())
+            query = query.filter(subject__category__id=category)
+        
+        all_questions = list(query.all())
         selected_questions = random.sample(all_questions, min(10, len(all_questions)))
 
         exam = Exam.objects.create(student_name=student_name)
