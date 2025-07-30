@@ -3,18 +3,27 @@ from .models import Exam, Question, Answer, Certificado, Subject, Category
 import random
 
 def index(request):
+    subjects = Subject.objects.all()
     categories = Category.objects.all()
     exams = Exam.objects.all().order_by('-date') # muestra los últimos 10 exámenes
-    return render(request, 'index.html', {'exams': exams, 'categories': categories})
+    context = {
+        'exams': exams, 
+        'categories': categories,
+        'subjects': subjects
+    }
+    return render(request, 'index.html', context)
 
 def exam_start(request):
     if request.method == 'POST':
         student_name = request.POST.get('student_name')
         category = request.POST.get('category')
+        subject = request.POST.get('subject')
         print(f"Selected category: {category}")
         query = Question.objects
         if category and category.isdigit():
             query = query.filter(subject__category__id=category)
+        if subject and subject.isdigit():
+            query = query.filter(subject__id=subject)
         
         all_questions = list(query.all())
         selected_questions = random.sample(all_questions, min(10, len(all_questions)))
@@ -29,7 +38,8 @@ def exam_start(request):
         return redirect('exam_question')
 
     category = request.GET.get('category')
-    return render(request, 'exam_start.html', {'category': category})
+    subject = request.GET.get('subject')
+    return render(request, 'exam_start.html', {'category': category, 'subject': subject})
 
 
 def exam_question(request):

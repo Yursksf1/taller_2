@@ -24,6 +24,13 @@
             {% endfor %}
     {% endif %}
 
+    {% if subjects %}
+        <h3 class="mt-4">Materias Disponibles</h3>
+            {% for subject in subjects %}
+                <a href="{% url 'exam_start' %}?subject={{ subject.id }}" class="btn btn-primary">{{ subject.name }}</a>
+            {% endfor %}
+    {% endif %}
+
     <hr>
 
     <h4 class="mt-5">Exámenes Presentados</h4>
