@@ -33,6 +33,11 @@
                             <p class="card-text">
                                 <strong>Puntaje:</strong> {{ exam.score }} / 100
                             </p>
+                            {% if exam.score == 100.00 %}
+                                <a href="{% url 'view_certificado' exam.id %}" class="btn btn-success">Ver Certificado</a>
+                            {% else %}
+                                <span class="text-danger">No calificado</span>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

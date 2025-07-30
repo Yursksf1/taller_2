@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Exam, Question, Answer
+from .models import Exam, Question, Answer, Certificado
 import random
 
 def index(request):
@@ -65,3 +65,11 @@ def exam_result(request):
     exam = get_object_or_404(Exam, id=exam_id)
 
     return render(request, 'exam_result.html', {'exam': exam})
+
+def view_certificado(request, exam_id):
+    exam = get_object_or_404(Exam, id=exam_id)
+    if exam.score == 100.00:
+        certificado = Certificado.objects.filter(exam=exam).first()
+        if not certificado:
+            certificado = Certificado.objects.create(exam=exam) 
+    return render(request, 'certificado.html', {'certificado': certificado})
