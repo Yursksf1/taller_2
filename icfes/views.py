@@ -1,15 +1,22 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Exam, Question, Answer, Certificado
+from .models import Exam, Question, Answer, Certificado, Subject, Category
 import random
 
 def index(request):
+    categories = Category.objects.all()
     exams = Exam.objects.all().order_by('-date') # muestra los últimos 10 exámenes
-    return render(request, 'index.html', {'exams': exams})
+    return render(request, 'index.html', {'exams': exams, 'categories': categories})
 
 def exam_start(request):
     if request.method == 'POST':
         student_name = request.POST.get('student_name')
-        all_questions = list(Question.objects.all())
+        category = request.POST.get('category')
+        print(f"Selected category: {category}")
+        all_questions = []
+        if category and category.isdigit():
+            all_questions = list(Question.objects.filter(subject__category__id=category))
+        else:
+            all_questions = list(Question.objects.all())
         selected_questions = random.sample(all_questions, min(10, len(all_questions)))
 
         exam = Exam.objects.create(student_name=student_name)
@@ -21,7 +28,8 @@ def exam_start(request):
 
         return redirect('exam_question')
 
-    return render(request, 'exam_start.html')
+    category = request.GET.get('category')
+    return render(request, 'exam_start.html', {'category': category})
 
 
 def exam_question(request):

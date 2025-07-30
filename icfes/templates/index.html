@@ -17,6 +17,12 @@
     <h1>Bienvenido al Simulador ICFES</h1>
     <p>Haz clic para comenzar el simulacro:</p>
     <a href="{% url 'exam_start' %}" class="btn btn-primary">Iniciar examen</a>
+    {% if categories %}
+        <h3 class="mt-4">Temas Disponibles</h3>
+            {% for category in categories %}
+                <a href="{% url 'exam_start' %}?category={{ category.id }}" class="btn btn-primary">{{ category.name }}</a>
+            {% endfor %}
+    {% endif %}
 
     <hr>
 
