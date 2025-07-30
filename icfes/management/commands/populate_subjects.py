@@ -4,7 +4,6 @@ from icfes.models import Subject, Category
 class Command(BaseCommand):
     def handle(self, *args, **options):
         print('Hola mundo')
-        #subjects = ["Geometria", "Estadistica", "Aritmetica", "Algebra"]
 
         subjects = {
             "Matematicas": ["Geometria", "Estadistica", "Aritmetica", "Algebra"],
